@@ -1,4 +1,7 @@
+import datetime
 import requests
+import tensorflow as tf
+import tensorflow_addons as tfa
 from keras.datasets import mnist
 from keras.layers import Conv2D, Dense, Flatten, MaxPooling2D
 from keras.models import Sequential, load_model as keras_load_model
@@ -16,10 +19,10 @@ DATA_FOLDER = '/data'
 def load_dataset(n_train=None, n_test=None):
   # load dataset
   (trainX, trainY), (testX, testY) = mnist.load_data()
-  n_trainX = n_train if n_train else len(trainX)
-  n_trainY = n_train if n_train else len(trainY)
-  n_testX = n_test if n_test else len(testX)
-  n_testY = n_test if n_test else len(testY)
+  n_trainX = int(n_train) if n_train else len(trainX)
+  n_trainY = int(n_train) if n_train else len(trainY)
+  n_testX = int(n_test) if n_test else len(testX)
+  n_testY = int(n_test) if n_test else len(testY)
 
   # reshape dataset to have a single channel
   trainX = trainX.reshape((trainX.shape[0], 28, 28, 1))
@@ -68,6 +71,13 @@ def evaluate_model(dataX, dataY, n_folds=2, epochs=1, batch_size=32):
   # prepare cross validation
   kfold = KFold(n_folds, shuffle=True, random_state=1)
 
+  # initialize tqdm callback with default parameters
+  tqdm_callback = tfa.callbacks.TQDMProgressBar()
+
+  # initialize tensorboard callback with default parameters
+  log_dir = '%s/tensorboard-%s' % (DATA_FOLDER, datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
+  tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
+
   # enumerate splits
   for train_ix, test_ix in kfold.split(dataX):
     # define model
@@ -77,7 +87,7 @@ def evaluate_model(dataX, dataY, n_folds=2, epochs=1, batch_size=32):
     trainX, trainY, testX, testY = dataX[train_ix], dataY[train_ix], dataX[test_ix], dataY[test_ix]
 
     # fit model
-    history = model.fit(trainX, trainY, epochs, batch_size, validation_data=(testX, testY), verbose=0)
+    history = model.fit(trainX, trainY, epochs=epochs, batch_size=batch_size, validation_data=(testX, testY), verbose=0, callbacks=[tqdm_callback, tensorboard_callback])
 
     # evaluate model
     _, acc = model.evaluate(testX, testY, verbose=0)

@@ -2,8 +2,8 @@ import os
 from functions import *
 
 if __name__ == "__main__":
-  n_train = os.environ.get('MNIST_N_SAMPLES_TRAINING', 1000)
-  n_test = os.environ.get('MNIST_N_SAMPLES_TESTING', 1000)
+  n_train = os.environ.get('MNIST_N_SAMPLES_TRAINING', None)
+  n_test = os.environ.get('MNIST_N_SAMPLES_TESTING', None)
 
   # load dataset
   trainX, trainY, testX, testY = load_dataset(n_train, n_test)

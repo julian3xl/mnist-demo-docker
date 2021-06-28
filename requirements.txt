@@ -4,4 +4,6 @@ matplotlib
 numpy~=1.19.2
 requests
 sklearn
+tensorflow-addons
 tensorflow~=2.4.2
+tqdm

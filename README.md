@@ -24,13 +24,13 @@ $ ls -l data/
 
 You can tweak a little bit the training with the following env variables (-e docker's arg, Example: docker run -e MNIST_EPOCHS=1 ...):
 ```
-MNIST_N_SAMPLES_TRAINING (defaults to 1000): number of training samples to be used during the training
+MNIST_N_SAMPLES_TRAINING: number of training samples to be used during the training
 
-MNIST_N_SAMPLES_TESTING (defaults to 1000): number of validation samples to be used during the training
+MNIST_N_SAMPLES_TESTING: number of validation samples to be used during the training
 
-MNIST_N_FOLDS (defaults to 2): number of splits to perform cross-validation
+MNIST_N_FOLDS (defaults to 5): number of splits to perform cross-validation
 
-MNIST_EPOCHS (defaults to 1): number of epochs to run
+MNIST_EPOCHS (defaults to 10): number of epochs to run
 
 MNIST_BATCH_SIZE (defaults to 32): number of samples to train on every batch
 ```
